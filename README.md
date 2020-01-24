@@ -34,3 +34,5 @@ npm i
 ## Sprint
 
 ![backlog](./docs/backlog.png)
+
+![sprint_01](./docs/sprint_01.jpg)
