@@ -1,0 +1,5 @@
+.vscode
+.serverless
+__pycache__
+env
+node_modules

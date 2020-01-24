@@ -1,0 +1,61 @@
+service: ${self:custom.name}
+
+plugins:
+    - serverless-python-requirements
+    - serverless-wsgi
+
+package:
+    exclude:
+        - .vscode/**
+        - .serverless/**
+        - __pycache__/**
+        - node_modules/**
+        - env/**
+        - tests/**
+        - README.md
+        - package.json
+        - package-lock.json
+        - requirements.txt
+
+provider:
+    name: aws
+    runtime: python3.6
+    stage: ${opt:stage, 'dev'}
+    region: eu-central-1
+
+environment:
+    APP_CONFIG: ${self:provider.stage}
+    PROVIDER_REGION: ${self:provider.region}
+
+custom:
+    name: enigma-scrum-todo
+    wsgi:
+        app: run.application
+        packRequirements: false
+    pythonRequirements:
+        dockerizePip: non-linux
+
+functions:
+    getTodoList:
+        handler: wsgi_handler.handler
+        events:
+            - http:
+                path: api/todo
+                method: get
+                cors: true
+    
+    createTodo:
+        handler: wsgi_handler.handler
+        events:
+            - http:
+                path: api/todo
+                method: post
+                cors: true
+    
+    deleteTodo:
+        handler: wsgi_handler.handler
+        events:
+            - http:
+                path: api/todo/{id}
+                method: delete
+                cors: true
