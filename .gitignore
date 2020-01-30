@@ -1,5 +1,6 @@
 .vscode
 .serverless
+.dynamodb
 __pycache__
 env
 node_modules

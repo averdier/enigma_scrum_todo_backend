@@ -30,9 +30,20 @@ npm i
 | SECRET_KEY      | Application secret key    | False    | Random key                       |
 | NAME            | Application name          | False    | enigma_scrum_backend             |
 | PROVIDER_REGION | AWS region provider       | False    | eu-central-1                     |
+| TODO_TABLE      | DynamoDB todo table       | True     |                                  |
+| TODO_PER_PAGE   | Todo per page             | False    | 35                               |
 
 ## Sprint
 
-![backlog](./docs/backlog.png)
+## Sprint 01
+![backlog_sprint_01](./docs/backlog_sprint_01.png)
+
 
 ![sprint_01](./docs/sprint_01.jpg)
+
+## Sprint 02
+
+![backlog_sprint_02](./docs/backlog_sprint_02.jpg)
+
+
+![sprint_02](./docs/sprint_02.jpg)

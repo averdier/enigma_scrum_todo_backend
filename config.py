@@ -15,6 +15,8 @@ class Config:
     NAME = os.getenv('APP_NAME', 'enigma_scrum_backend')
 
     PROVIDER_REGION = os.getenv('PROVIDER_REGION', 'eu-central-1')
+    TODO_TABLE = os.getenv('TODO_TABLE', 'todo-table-dev')
+    TODO_PER_PAGE = int(os.getenv('TODO_PER_PAGE', '35'))
 
     RESTPLUS_SWAGGER_UI_DOC_EXPANSION = 'list'
     RESTPLUS_VALIDATE = True
