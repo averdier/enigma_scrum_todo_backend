@@ -1,0 +1,111 @@
+version: 2.1
+
+orbs:
+  aws-cli: circleci/aws-cli@0.1.13
+
+executors:
+  python-executor:
+    docker:
+      - image: circleci/python:3.6
+
+commands:
+  install_nodejs:
+    steps:
+      - run:
+          name: Install NodeJS and NPM 10.x
+          command: |
+            curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+            sudo apt install -y nodejs
+
+  install_serverless:
+    steps:
+      - run:
+          name: Install Serverless framework
+          command: sudo npm i -g serverless
+  
+  restore_nodejs:
+    steps:
+      - restore_cache:
+          keys:
+            - node-cache-{{ checksum "package.json" }}-{{ .Branch }}
+  
+  save_nodejs:
+    steps:
+      - save_cache:
+          key: node-cache-{{ checksum "package.json" }}-{{ .Branch }}
+          paths:
+            - ~/node_modules
+
+jobs:
+  deploy:
+    parameters:
+      env:
+        type: enum
+        enum: ['production', 'sprint_01', 'sprint_02', 'sprint_03']
+      aws-access-key-id:
+        type: env_var_name
+      aws-secret-access-key:
+        type: env_var_name
+      aws-region:
+        type: env_var_name
+    
+    executor: python-executor
+    steps:
+      - aws-cli/install
+      - aws-cli/configure:
+          aws-access-key-id: << parameters.aws-access-key-id >>
+          aws-secret-access-key: << parameters.aws-secret-access-key >>
+          aws-region: << parameters.aws-region >>
+      - checkout
+      - install_nodejs
+      - restore_nodejs
+      - install_serverless
+      - run: npm install
+      - save_nodejs
+      - run: npm run deploy:<< parameters.env >>
+
+workflows:
+  version: 2
+  prepare_and_deploy:
+    jobs:
+      - deploy: $deploy
+          env: sprint_01
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          aws-region: AWS_DEFAULT_REGION
+          name: deploy_sprint_01
+          filters:
+            branches:
+              only: sprint_01
+            tags:
+              ignore: /.*/
+      
+      - deploy:
+          <<: *deploy
+          env: sprint_02
+          name: deploy_sprint_02
+          filters:
+            branches:
+              only: sprint_02
+            tags:
+              ignore: /.*/
+      
+      - deploy:
+          <<: *deploy
+          env: sprint_03
+          name: deploy_sprint_03
+          filters:
+            branches:
+              only: sprint_03
+            tags:
+              ignore: /.*/
+      
+      - deploy:
+          <<: *deploy
+          env: prod
+          name: deploy_production
+          filters:
+            branches:
+              only: master
+            tags:
+              ignore: /.*/

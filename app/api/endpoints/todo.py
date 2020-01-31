@@ -1,10 +1,11 @@
 # coding: utf-8
 
-from flask import request, current_app
+from flask import request, current_app, g
 from flask_restplus import Namespace, Resource, abort
 from werkzeug.exceptions import HTTPException
 from ..serializers.todo import todo_model, todo_resource, todo_paginated_model
 from ..parsers import pagniation_parser
+from ..security import auth
 from ...models import Todo
 
 
@@ -13,13 +14,14 @@ ns = Namespace('todo', description='Todo related operations.')
 
 @ns.route('')
 class TodoResource(Resource):
+    decorators = [auth.login_required]
 
     @ns.marshal_with(todo_paginated_model)
     @ns.expect(pagniation_parser)
     def get(self):
         """Get todo list
         """
-        owner = 'fixture'
+        owner = g.user['username']
         args = pagniation_parser.parse_args()
 
         limit = args['limit'] if args['limit'] is not None\
@@ -72,7 +74,7 @@ class TodoResource(Resource):
     def post(self):
         """Add todo
         """
-        owner = 'fixture'
+        owner = g.user['username']
         payload = request.json
 
         todo = Todo(
@@ -92,6 +94,7 @@ class TodoResource(Resource):
 
 @ns.route('/<todo_id>')
 class TodoItemResource(Resource):
+    decorators = [auth.login_required]
 
     @ns.expect(todo_model)
     @ns.marshal_with(todo_resource)
@@ -101,7 +104,7 @@ class TodoItemResource(Resource):
         Arguments:
             todo_id {str} -- Todo unique ID
         """
-        owner = 'fixture'
+        owner = g.user['username']
         payload = request.json
 
         try:
@@ -134,7 +137,7 @@ class TodoItemResource(Resource):
         Arguments:
             todo_id {str} -- Todo unique ID
         """
-        owner = 'fixture'
+        owner = g.user['username']
 
         try:
             query = [t for t in Todo.query(owner, Todo.uuid == todo_id)]

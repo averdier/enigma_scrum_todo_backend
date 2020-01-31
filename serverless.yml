@@ -7,10 +7,12 @@ plugins:
 
 package:
   exclude:
+    - .circleci/**
     - .vscode/**
     - .serverless/**
     - .dynamodb/**
     - __pycache__/**
+    - docs/**
     - node_modules/**
     - env/**
     - tests/**
@@ -41,11 +43,13 @@ provider:
 environment:
   APP_CONFIG: ${self:provider.stage}
   PROVIDER_REGION: ${self:provider.region}
+  AUTH_POOL: ${self:custom.authPool}
   TODO_TABLE: ${self:custom.todoTable}
   TODO_PER_PAGE: ${self:custom.todoPerPage}
 
 custom:
   name: enigma-scrum-todo
+  authPool: 'eu-central-1_3jLXINTS3'
   todoTable: '${self:custom.name}-todo-table-${self:provider.stage}'
   todoPerPage: 35
   wsgi:

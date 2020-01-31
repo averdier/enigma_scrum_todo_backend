@@ -18,6 +18,8 @@ class Config:
     TODO_TABLE = os.getenv('TODO_TABLE', 'todo-table-dev')
     TODO_PER_PAGE = int(os.getenv('TODO_PER_PAGE', '35'))
 
+    AUTH_POOL = os.getenv('AUTH_POOL', 'eu-central-1_3jLXINTS3')
+
     RESTPLUS_SWAGGER_UI_DOC_EXPANSION = 'list'
     RESTPLUS_VALIDATE = True
     RESTPLUS_MASK_SWAGGER = False

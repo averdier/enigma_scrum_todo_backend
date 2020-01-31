@@ -4,7 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy:sprint_01": "sls deploy --stage sprint01 -v",
+    "deploy:sprint_02": "sls deploy --stage sprint02 -v",
+    "deploy:sprint_03": "sls deploy --stage sprint03 -v",
+    "deploy:production": "sls deploy --stage production -v"
   },
   "repository": {
     "type": "git",

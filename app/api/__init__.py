@@ -10,7 +10,15 @@ api = Api(
     blueprint,
     title='Scrum API backend',
     description='Swagger documentation for Enigma Scrum todo backend',
-    doc='/' if os.getenv('APP_CONFIG', 'dev') == 'dev' else None
+    doc='/' if os.getenv('APP_CONFIG', 'dev') == 'dev' else None,
+    authorizations={
+        'tokenKey': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    },
+    security='tokenKey'
 )
 
 from .endpoints.todo import ns as todo_namespace  # noqa E402
