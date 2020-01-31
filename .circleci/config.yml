@@ -12,11 +12,11 @@ commands:
   install_nodejs:
     steps:
       - run:
-          name: Install NodeJS and NPM 10.x
+          name: Install NodeJs and NPM 10.x
           command: |
             curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
             sudo apt install -y nodejs
-
+  
   install_serverless:
     steps:
       - run:
@@ -41,14 +41,13 @@ jobs:
     parameters:
       env:
         type: enum
-        enum: ['production', 'sprint_01', 'sprint_02', 'sprint_03']
+        enum: ["prod", "sprint_01", "sprint_02", "sprint_03"]
       aws-access-key-id:
         type: env_var_name
       aws-secret-access-key:
         type: env_var_name
       aws-region:
         type: env_var_name
-    
     executor: python-executor
     steps:
       - aws-cli/install
@@ -68,7 +67,8 @@ workflows:
   version: 2
   prepare_and_deploy:
     jobs:
-      - deploy: $deploy
+
+      - deploy: &deploy
           env: sprint_01
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
@@ -80,6 +80,7 @@ workflows:
             tags:
               ignore: /.*/
       
+
       - deploy:
           <<: *deploy
           env: sprint_02
@@ -89,17 +90,17 @@ workflows:
               only: sprint_02
             tags:
               ignore: /.*/
-      
+
       - deploy:
           <<: *deploy
-          env: sprint_03
-          name: deploy_sprint_03
+          env: sprint_02
+          name: deploy_sprint_02
           filters:
             branches:
-              only: sprint_03
+              only: sprint_02
             tags:
               ignore: /.*/
-      
+
       - deploy:
           <<: *deploy
           env: prod
