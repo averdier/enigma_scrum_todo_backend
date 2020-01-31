@@ -8,7 +8,7 @@
     "deploy:sprint_01": "sls deploy --stage sprint01 -v",
     "deploy:sprint_02": "sls deploy --stage sprint02 -v",
     "deploy:sprint_03": "sls deploy --stage sprint03 -v",
-    "deploy:production": "sls deploy --stage production -v"
+    "deploy:prod": "sls deploy --stage prod -v"
   },
   "repository": {
     "type": "git",
